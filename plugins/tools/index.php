@@ -549,8 +549,6 @@ ul.tab li a:focus, ul.tab li a.active {background-color: #ccc;}
 //-->
 </style>
 
-<div style="border:1px solid grey; padding:20px;text-align:center;">Made by <a href="https://blog.ss88.uk/hestiacp-tools-plugin" target="_blank">Steven Sullivan</a> - Version 1.1</div>
-
 <script>
 window.onload = function(e){ document.getElementById("FirstTab").click() }
 </script>
