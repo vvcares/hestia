@@ -1,5 +1,5 @@
 <?php
-# Steven Sullivan Ltd
+# Hestia TOOLS index
 error_reporting(NULL);
 $TAB = 'TOOLS';
 
@@ -15,10 +15,9 @@ if ($_SESSION['user'] != 'admin') {
 include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 ?>
-<div class="l-center units"><div class="l-unit"></div>
+<div class="l-center units"><div></div>
 
 <h1>Tools</h1>
-<p>A list of useful tools for hestiaCP Administrators.</p>
 
 
 <ul class="tab">
@@ -32,7 +31,7 @@ top_panel($user,$TAB);
 </ul>
 
 <?php
-$UserData = shell_exec(hestia_CMD.'v-list-users json');
+$UserData = shell_exec(HESTIA_CMD.'v-list-users json');
 $UserData = json_decode($UserData, true);
 ksort($UserData);
 ?>
@@ -57,6 +56,7 @@ echo '<table class="sortable responstable">
 foreach($UserData as $Username => $Array)
 {
     $DiskPercent = (($Array['U_DISK'] / $Array['DISK_QUOTA']) * 100);
+	$Disk = ($Array['U_DISK']);
 	$DiskPercent = ($DiskPercent>100) ? 100 : $DiskPercent;
     $BandPercent = (($Array['U_BANDWIDTH'] / $Array['BANDWIDTH']) * 100);
 	$BandPercent = ($DiskPercent>100) ? 100 : $BandPercent;
@@ -65,7 +65,7 @@ foreach($UserData as $Username => $Array)
     <td>'. $Array['FNAME'] . ' ' . $Array['LNAME'] . '</td>
     <td>'. $Array['CONTACT'] .'</td>
     <td>'. $Array['PACKAGE'] .'</td>
-    <td sorttable_customkey="'. $DiskPercent .'"><div class="progress"><div class="prgbar" style="width:'. $DiskPercent .'%;"></div></div></td>
+	<td sorttable_customkey="'. $DiskPercent .'"><div class="progress"><div class="prgbar" style="width:'. $DiskPercent .'%;"><br>'. $Disk .' MB</div></div></td>
     <td sorttable_customkey="'. $BandPercent .'"><div class="progress"><div class="prgbar" style="width:'. $BandPercent .'%;"></div></div></td>
     <td>'. $Array['SUSPENDED'] .'</td>
     <td>'. $Array['DATE'] .'</td>
@@ -79,12 +79,12 @@ echo '</tbody>
 
 <div id="Domains" class="tabcontent">
 <?php
-    //$Users = shell_exec(hestia_CMD.'v-list-users json');
+    //$Users = shell_exec(HESTIA_CMD.'v-list-users json');
     //$Users = json_decode($Users, true);
     $Array = $Data = $tmpData = $AData = array();
     foreach($UserData as $Username=>$Array)
     {
-        $Data = shell_exec(hestia_CMD.'v-list-web-domains '. $Username .' json');
+        $Data = shell_exec(HESTIA_CMD.'v-list-web-domains '. $Username .' json');
         $tmpData[$Username] = json_decode($Data, true);
         $tmpData[$Username]['tmp']['DISK_QUOTA'] = $Array['DISK_QUOTA'];
         $tmpData[$Username]['tmp']['BANDWIDTH'] = $Array['BANDWIDTH'];
@@ -115,14 +115,15 @@ foreach($Data as $Username => $AData)
 
         $DiskPercent = (($Array['U_DISK'] / $Data[$Username]['tmp']['DISK_QUOTA']) * 100);
 		$DiskPercent = ($DiskPercent>100) ? 100 : $DiskPercent;
+		$Disk_Web = $Array['U_DISK'];
         $BandPercent = (($Array['U_BANDWIDTH'] / $Data[$Username]['tmp']['BANDWIDTH']) * 100);
 		$BandPercent = ($BandPercent>100) ? 100 : $BandPercent;
         echo '<tr>
         <td align="left"><a href="/login/?loginas='. $Username .'" title="Login to this account">'. $Username .' <i class="fa fa-sign-in" style="color:green;"></i></a></td>
-        <td><a href="http://'.$Website.'" title="Visit this website" target="_blank">'. $Website . ' <i class="fa fa-eye" style="color:green;"></i></a></td>
+        <td><a href="/edit/web/?domain='. $Website .'" title="Edit this Domain">'. $Website . ' <i class="fa fa-eye" style="color:green;"></i></a></td>
         <td>'. $Array['IP'] .'</td>
         <td>'. $Array['SSL'] .'</td>
-        <td sorttable_customkey="'. $DiskPercent .'"><div class="progress"><div class="prgbar" style="width:'. $DiskPercent .'%;"></div></div></td>
+		<td sorttable_customkey="'. $DiskPercent .'"><div class="progress"><div class="prgbar" style="width:'. $DiskPercent .'%;"><br>'. $Disk_Web .' MB</div></div></td>
         <td sorttable_customkey="'. $BandPercent .'"><div class="progress"><div class="prgbar" style="width:'. $BandPercent .'%;"></div></div></td>
         <td>'. $Array['SUSPENDED'] .'</td>
         <td>'. $Array['DATE'] .'</td>
@@ -138,12 +139,12 @@ echo '</tbody>
 <div id="Databases" class="tabcontent">
 <?php
 
-    //$Users = shell_exec(hestia_CMD.'v-list-users json');
+    //$Users = shell_exec(HESTIA_CMD.'v-list-users json');
     //$Users = json_decode($Users, true);
     $Array = $Data = $tmpData = $AData = array();
     foreach($UserData as $Username=>$Array)
     {
-        $Data = shell_exec(hestia_CMD.'v-list-databases '. $Username .' json');
+        $Data = shell_exec(HESTIA_CMD.'v-list-databases '. $Username .' json');
         $tmpData[$Username] = json_decode($Data, true);
     }
     $Data = $tmpData;
@@ -169,7 +170,7 @@ foreach($Data as $Username => $AData)
     {
         echo '<tr>
         <td align="left"><a href="/login/?loginas='. $Username .'" title="Login to this account">'. $Username .' <i class="fa fa-sign-in" style="color:green;"></i></a></td>
-        <td>'. $Array['DATABASE'] . '</td>
+		<td>'. $Array['DATABASE'] .'</td>
         <td>'. $Array['DBUSER'] .'</td>
         <td>'. $Array['HOST'] .'</td>
         <td sorttable_customkey="'. $Array['U_DISK'] .'">'. $Array['U_DISK'] .'MB</td>
@@ -189,7 +190,7 @@ echo '</tbody>
     $Array = $Data = $tmpData = $AData = array();
     foreach($UserData as $Username=>$Array)
     {
-        $Data = shell_exec(hestia_CMD.'v-list-dns-domains '. $Username .' json');
+        $Data = shell_exec(HESTIA_CMD.'v-list-dns-domains '. $Username .' json');
         $tmpData[$Username] = json_decode($Data, true);
     }
     $Data = $tmpData;
@@ -233,7 +234,7 @@ echo '</tbody>
     $Array = $Data = $tmpData = $AData = array();
     foreach($UserData as $Username=>$Array)
     {
-        $Data = shell_exec(hestia_CMD.'v-list-mail-domains '. $Username .' json');
+        $Data = shell_exec(HESTIA_CMD.'v-list-mail-domains '. $Username .' json');
         $tmpData[$Username] = json_decode($Data, true);
     }
     $Data = $tmpData;
@@ -282,12 +283,12 @@ echo '</tbody>
 
 <div id="CronJobs" class="tabcontent">
 <?php
-    //$Users = shell_exec(hestia_CMD.'v-list-users json');
+    //$Users = shell_exec(HESTIA_CMD.'v-list-users json');
     //$Users = json_decode($Users, true);
     $Array = $Data = $tmpData = $AData = array();
     foreach($UserData as $Username=>$Array)
     {
-        $Data = shell_exec(hestia_CMD.'v-list-cron-jobs '. $Username .' json');
+        $Data = shell_exec(HESTIA_CMD.'v-list-cron-jobs '. $Username .' json');
         $tmpData[$Username] = json_decode($Data, true);
     }
     $Data = $tmpData;
@@ -332,12 +333,12 @@ echo '</tbody>
 
 <div id="LEUsers" class="tabcontent">
 <?php
-    //$Users = shell_exec(hestia_CMD.'v-list-users json');
+    //$Users = shell_exec(HESTIA_CMD.'v-list-users json');
     //$Users = json_decode($Users, true);
     $Array = $Data = $tmpData = $AData = array();
     foreach($UserData as $Username=>$Array)
     {
-        $Data = shell_exec(hestia_CMD.'v-list-letsencrypt-user '. $Username .' json');
+        $Data = shell_exec(HESTIA_CMD.'v-list-letsencrypt-user '. $Username .' json');
         if(strstr($Data, 'Error')==TRUE)
           continue;
         $tmpData[$Username] = json_decode(str_replace('"THUMB', '"THUMB"', $Data), true)[$Username];
