@@ -16,7 +16,7 @@ function InstallhestiaCPFrontEnd()
 	echo "Install hestiaCP Front..."
 	
 	mkdir /usr/local/hestia/web/list/tools
-	wget https://raw.githubusercontent.com/SS88UK/hestiaCP-Tools-Plugin/master/index.php -O /usr/local/hestia/web/list/tools/index.php
+	wget https://raw.githubusercontent.com/vvcares/hestia/master/plugins/tools/tools.php -O /usr/local/hestia/web/list/tools/index.php
 
 	# Chmod files
 	find /usr/local/hestia/web/list/tools -type d -exec chmod 755 {} \;
