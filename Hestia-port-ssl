@@ -1,0 +1,7 @@
+v-add-letsencrypt-domain 'admin' $HOSTNAME '' 'yes'
+v-update-host-certificate admin $HOSTNAME
+echo "UPDATE_HOSTNAME_SSL='yes'" >> /usr/local/vesta/conf/vesta.conf
+
+##For Webmin SSL
+cat /home/admin/conf/web/ssl.$HOSTNAME.crt /home/admin/conf/web/ssl.$HOSTNAME.key > /etc/webmin/miniserv.pem
+sudo service webmin restart
