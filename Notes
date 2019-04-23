@@ -1,0 +1,2 @@
+Manual triggered hestia tasks queue (Eg: backup/restore etc)
+ - nano /usr/local/hestia/data/queue/backup.pipe
