@@ -1,7 +1,14 @@
-v-add-letsencrypt-domain 'admin' $HOSTNAME '' 'yes'
-v-update-host-certificate admin $HOSTNAME
-echo "UPDATE_HOSTNAME_SSL='yes'" >> /usr/local/hestia/conf/vesta.conf
+#!/bin/bash
 
-##For Webmin SSL
+echo What is the new hestia port ?
+read PORT
+v-change-sys-port $PORT
+
+#v-add-letsencrypt-domain 'admin' $HOSTNAME '' 'yes'
+#v-update-host-certificate admin $HOSTNAME
+#echo "UPDATE_HOSTNAME_SSL='yes'" >> /usr/local/hestia/conf/vesta.conf
+
+## For Webmin SSL
+echo Applying SSL CERTS of $HOSTNAME to your Webmin..
 cat /home/admin/conf/web/ssl.$HOSTNAME.crt /home/admin/conf/web/ssl.$HOSTNAME.key > /etc/webmin/miniserv.pem
 sudo service webmin restart
