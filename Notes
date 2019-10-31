@@ -1,2 +1,9 @@
 Manual triggered hestia tasks queue (Eg: backup/restore etc)
  - nano /usr/local/hestia/data/queue/backup.pipe
+------------------
+How to change root user's email to gmail ?
+-- sudo nano /etc/aliases
+Add your email as..
+-- root:myname@gmail.com
+-- sudo newaliases
+-------------------
