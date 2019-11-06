@@ -1,12 +1,5 @@
-#!/bin/bash
-
-echo What is the new hestia port ?
-read PORT
-v-change-sys-port $PORT
-
-#v-add-letsencrypt-domain 'admin' $HOSTNAME '' 'yes'
-#v-update-host-certificate admin $HOSTNAME
-#echo "UPDATE_HOSTNAME_SSL='yes'" >> /usr/local/hestia/conf/vesta.conf
+v-change-sys-port 8080
+v-add-letsencrypt-host
 
 ## For Webmin SSL
 echo Applying SSL CERTS of $HOSTNAME to your Webmin..
