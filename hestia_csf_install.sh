@@ -1,3 +1,4 @@
+apt install rename
 cd /usr/src
 rm -fv csf.tgz
 wget https://download.configserver.com/csf.tgz
