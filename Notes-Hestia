@@ -1,4 +1,4 @@
-Manual triggered hestia tasks queue (Eg: backup/restore etc)
+Hestia waiting cronjobs queue..
  - nano /usr/local/hestia/data/queue/backup.pipe
 ------------------
 How to change root user's email to gmail ?
@@ -12,5 +12,10 @@ MySQL Date error, not empty etc error..
 Add this into the file : '/etc/mysql/mariadb.cnf'
 [mysqld]
 sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION;
-
 -------------------
+SSHD security settings:
+sudo nano /etc/ssh/sshd_config
+- Port 25000
+#Set SSH client connection timeout. Below will check every 120 seconds, if not alive for 10 times, that session will be terminated
+- ClientAliveInterval 120
+- ClientAliveCountMax 10
