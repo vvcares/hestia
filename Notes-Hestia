@@ -19,3 +19,35 @@ sudo nano /etc/ssh/sshd_config
 #Set SSH client connection timeout. Below will check every 120 seconds, if not alive for 10 times, that session will be terminated
 - ClientAliveInterval 120
 - ClientAliveCountMax 10
+-------------------
+MALDET
+wget http://www.rfxn.com/downloads/maldetect-current.tar.gz
+cd /usr/src
+tar -xvf maldetect-current.tar.gz
+cd maldetect*
+./install.sh
+nano /usr/local/maldetect/conf.maldet
+
+sudo apt-get update -y
+sudo apt-get install -y inotify-tools
+ 
+- email_alert="1"
+- email_addr="root"
+- quarantine_hits="1"
+- quarantine_clean="1"
+- quarantine_suspend_user="1"
+- scan_clamscan="1"
+- scan_ignore_root="0"
+
+sudo service maldet restart
+
+#### Testing maldet scan.
+
+cd /home/demo
+wget http://www.eicar.org/download/eicar.com
+wget http://www.eicar.org/download/eicar.com.txt
+wget http://www.eicar.org/download/eicarcom2.zip
+
+maldet -a /home/demo/
+#You should recvd a notify email on root@YourServer
+-------------------
