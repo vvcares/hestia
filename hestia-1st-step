@@ -3,8 +3,21 @@ nano /etc/ssh/sshd_config
 sudo /sbin/iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 22000 -j ACCEPT
 service reboot now
 
+### Changing hestia admin port
 v-change-sys-port 2083
 v-add-letsencrypt-host
+
+### install CSF
+apt install rename
+cd /usr/src
+rm -fv csf.tgz
+wget https://download.configserver.com/csf.tgz
+tar -xzf csf.tgz
+cd csf
+
+find . -type f -exec sed -i 's/VESTA/HESTIA/g' {} + && find . -type f -exec sed -i 's/Vesta/Hestia/g' {} + && find . -type f -exec sed -i 's/vesta/hestia/g' {} + && rename 's/VESTA/HESTIA/' * && rename 's/vesta/hestia/' *
+sh install.sh
+sh install.hestia.sh
 
 ### For Webmin
 sudo nano /etc/apt/sources.list
