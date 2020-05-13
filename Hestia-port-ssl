@@ -1,7 +1,0 @@
-v-change-sys-port 8080
-v-add-letsencrypt-host
-
-## For Webmin SSL
-echo Applying SSL CERTS of $HOSTNAME to your Webmin..
-cat /home/admin/conf/web/ssl.$HOSTNAME.crt /home/admin/conf/web/ssl.$HOSTNAME.key > /etc/webmin/miniserv.pem
-sudo service webmin restart

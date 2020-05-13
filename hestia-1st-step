@@ -1,0 +1,20 @@
+-- Change sshd port number 1st (22 -> 22000)
+nano /etc/ssh/sshd_config
+sudo /sbin/iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 22000 -j ACCEPT
+service reboot now
+
+v-change-sys-port 2083
+v-add-letsencrypt-host
+
+### For Webmin
+sudo nano /etc/apt/sources.list
+--Add on the bottom:
+deb http://download.webmin.com/download/repository sarge contrib
+
+--then get Webmin PGP key..
+wget http://www.webmin.com/jcameron-key.asc
+sudo apt-key add jcameron-key.asc
+sudo apt update 
+sudo apt install webmin
+cat /home/admin/conf/web/$HOSTNAME/ssl/$HOSTNAME.pem /home/admin/conf/web/$HOSTNAME/ssl/$HOSTNAME.key > /etc/webmin/miniserv.pem
+sudo service webmin restart
