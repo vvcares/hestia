@@ -1,0 +1,77 @@
+#!/bin/bash
+## backup each mysql db into a different file, rather than one big file
+## as with --all-databases. This will make restores easier.
+## To backup a single database simply add the db name as a parameter (or multiple dbs)
+
+# mkdir -p /vv_files/backups
+# useradd --home-dir /var/backups/mysql --gid backup --no-create-home mysql-backup
+## Remember to make the script executable, and unreadable by others
+# chown -R mysql-backup:backup /var/backups/mysql
+# chmod u=rwx,g=rx,o= /var/backups/mysql/dump.sh
+
+## crontab entry - backup every 6 hours
+# sudo crontab -e
+# 0 */6 * * * /backup/bkp_dbs.sh
+
+###########################################################
+## Create 'backup' mysql user (CLI >>>> mysql -u root -p)
+## CREATE USER 'backup'@'localhost' IDENTIFIED BY 'MyPass@123'; 
+## GRANT EVENT, LOCK TABLES, PROCESS, REFERENCES, SELECT, SHOW DATABASES, SHOW VIEW, TRIGGER ON *.* TO 'backup'@'localhost' ;
+## Or optionally, run this script as root with password stored on '/root/.my.cnf' file
+###########################################################
+
+##Getting mysql cridentials from .my.cnf
+#default source is /root/.my.cnf
+USER=$user
+PASS=$password
+
+OUTPUTDIR=$(dirname $0)"/databases"
+MYSQLDUMP="/usr/bin/mysqldump"
+MYSQL="/usr/bin/mysql"
+log=$(dirname $0)/log_bkpdbs.log
+timestamp=$(date +%F_%H%M)
+
+pfix="AllDbs"
+sfix="DBs.tar.gz"
+bkp_file=$pfix-$timestamp-$sfix #File name to be as backup done
+days=+10 						#Days old files will be deleted (system modified date)
+rm -r $OUTPUTDIR 				#remove the previous database source folder
+mkdir -p $OUTPUTDIR 			#make the new database source folder
+path=$(dirname $0) 				#set the working directory as current path
+log=log_bkpdbs.log 				#log file name
+log=$(dirname $0)/$log 			#will make new log file if not there
+
+echo "--------------------------------------------------------" >>$log
+echo $timestamp - Starting Backup Process >>$log
+echo "*****finding older then $days days bkps to be delete***" >>$log #will delete the compressed bkp files older than $days
+find $(dirname $0) -name "*$sfix" -type f -mtime $days -print -delete >>$log #will write the logs into $log file
+echo This is All Databases Bkp Script, will run as of your cron job.
+##########################################################################################
+
+if [ -z "$1" ]; then
+	#databases=`$MYSQL --user=$USER --password=$PASS --batch --skip-column-names -e "SHOW DATABASES;" | grep -v 'mysql\|information_schema'`
+	databases=`$MYSQL --user=$USER --batch --skip-column-names -e "SHOW DATABASES;" | grep -v 'mysql\|information_schema'`
+	for database in $databases; do
+		$MYSQLDUMP \
+		--user=$USER \
+		--force \
+		--quote-names --dump-date \
+		--opt --single-transaction \
+		--skip-events --routines --triggers \
+		--databases $database \
+		--result-file="$OUTPUTDIR/$database.sql"
+	done
+else
+	for database in ${@}; do
+		$MYSQLDUMP \
+		--user=$USER \
+		--force \
+		--quote-names --dump-date \
+		--opt --single-transaction \
+		--skip-events --routines --triggers \
+		--databases $database \
+		--result-file="$OUTPUTDIR/$database.sql"
+	done
+	fi
+	tar -zcvf $(dirname $0)/$bkp_file $OUTPUTDIR |tee -a $log
+	#/usr/bin/mail -s "Mysql DB bkps done" MyEmail@mygmail.com < $(dirname $0)/log_bkpdbs.log
