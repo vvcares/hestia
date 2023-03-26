@@ -1,3 +1,4 @@
+##### Latest TESTED ON Mar'2023 - Ubuntu-v20, Mysql-v8, Mariadb-v10
 #!/bin/bash
 ## backup each mysql db into a different file, rather than one big file
 ## as with --all-databases. This will make restores easier.
@@ -28,22 +29,23 @@ PASS=$password
 OUTPUTDIR=$(dirname $0)"/databases"
 MYSQLDUMP="/usr/bin/mysqldump"
 MYSQL="/usr/bin/mysql"
-log=$(dirname $0)/log_bkpdbs.log
 timestamp=$(date +%F_%H%M)
 
 pfix="AllDbs"
 sfix="DBs.tar.gz"
 bkp_file=$pfix-$timestamp-$sfix #File name to be as backup done
-days=+10 						#Days old files will be deleted (system modified date)
-rm -r $OUTPUTDIR 				#remove the previous database source folder
+days=+6 				#Days old files will be deleted (system modified date)
+rm -r $OUTPUTDIR			#remove the previous database source folder
 mkdir -p $OUTPUTDIR 			#make the new database source folder
-path=$(dirname $0) 				#set the working directory as current path
-log=log_bkpdbs.log 				#log file name
-log=$(dirname $0)/$log 			#will make new log file if not there
+path=$(dirname $0) 			#set the working directory as current path
+log=$(dirname $0)/log_bkpdbs.log
+log1=log_bkpdbs.log 			#log file name
+log=$(dirname $0)/$log1			#will make new log file if not there
+rm $log					#remove previous log file
 
-echo "--------------------------------------------------------" >>$log
-echo $timestamp - Starting Backup Process >>$log
-echo "*****finding older then $days days bkps to be delete***" >>$log #will delete the compressed bkp files older than $days
+echo All Databases backup [$timestamp ]>>$log
+echo - Starting Backup Process >>$log
+echo "***** This will delete older then $days days of existing bkp files ***" >>$log #will delete the compressed bkp files older than $days
 find $(dirname $0) -name "*$sfix" -type f -mtime $days -print -delete >>$log #will write the logs into $log file
 echo This is All Databases Bkp Script, will run as of your cron job.
 ##########################################################################################
@@ -73,5 +75,7 @@ else
 		--result-file="$OUTPUTDIR/$database.sql"
 	done
 	fi
+	cp $log $OUTPUTDIR
 	tar -zcvf $(dirname $0)/$bkp_file $OUTPUTDIR |tee -a $log
-	#/usr/bin/mail -s "Mysql DB bkps done" MyEmail@mygmail.com < $(dirname $0)/log_bkpdbs.log
+	
+#/usr/bin/mail -s "All DBs backup [s1.paysofts.com]" sales@vvcares.com < $log
