@@ -12,11 +12,11 @@ if [ -d "$DIR" ]; then
 fi
 
 
-	# Add the CSF navigation link to panel top right
-	PANEL=/usr/local/hestia/web/templates/includes/panel.php
-	
-	if grep -q 'CSF' $PANEL; then
-		echo 'This Link Is Already there.'
-	else
-		sed -i '/<div class="top-bar-right">/a <!-- CSF Link START --> <?php if ($_SESSION["user"] == "admin") { ?><li class="top-bar-menu-item"><a title="<?= _("CSF Firewall") ?>" class="top-bar-menu-link <?php if($TAB == "CSF") echo active ?>" href="/list/csf/"><i class="fas fa-shield-halved"></i><span class="top-bar-menu-link-label u-hide-desktop"><?= _("CSF Firewall") ?></span></a></li><?php } ?> <!-- CSF Link END --> ' $PANEL
-		fi
+# Add the CSF navigation link to panel top right
+PANEL=/usr/local/hestia/web/templates/includes/panel.php
+
+if grep -q 'CSF' $PANEL; then
+echo 'This Link Is Already there.'
+else
+sed -i '/<div class="top-bar-right">/a <!-- CSF Link START --> <?php if ($_SESSION["user"] == "admin") { ?><li class="top-bar-menu-item"><a title="<?= _("CSF Firewall") ?>" class="top-bar-menu-link <?php if($TAB == "CSF") echo active ?>" href="/list/csf/"><i class="fas fa-shield-halved"></i><span class="top-bar-menu-link-label u-hide-desktop"><?= _("CSF Firewall") ?></span></a></li><?php } ?> <!-- CSF Link END --> ' $PANEL
+fi
