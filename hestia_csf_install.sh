@@ -5,7 +5,6 @@
 DIR="/etc/csf/"
 if [ -d "$DIR" ]; then
   echo "CSF Directory exists - ${DIR}..."
-  //zip -r "/etc/CSF-Backup--$(date +"%Y-%m-%d").zip" $DIR
   zip -r /etc/CSF-BKP-$(date +"%m%d%Y%H%M%S").zip $DIR
   
   else  echo 'No CSF directory in default path. So installing new copy of CSF..'
