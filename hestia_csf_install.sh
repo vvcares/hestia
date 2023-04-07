@@ -8,7 +8,7 @@ if [ -d "$DIR" ]; then
   zip -r /etc/CSF-BKP-$(date +"%m%d%Y%H%M%S").zip $DIR
   
   else  echo 'No CSF directory in default path. So installing new copy of CSF..'
-  #apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.com/csf.tgz && tar -xzf csf.tgz && cd csf && bash install.hestia.sh
+  apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.com/csf.tgz && tar -xzf csf.tgz && cd csf && bash install.hestia.sh
 fi
 
 
