@@ -2,11 +2,11 @@
 #Author : vvcares.com
 #Tested Hestia v1.7x
 
-CSF1="/etc/csf/"
-if [ -d "$CSF1" ]; then
+DIR="/etc/csf/"
+if [ -d "$DIR" ]; then
   echo "CSF Directory exists - ${DIR}..."
-  //zip -r "/etc/CSF-Backup--$(date +"%Y-%m-%d").zip" $CSF1
-  zip -r /etc/CSF-BKP-$(date +"%m%d%Y%H%M%S").zip $CSF1
+  //zip -r "/etc/CSF-Backup--$(date +"%Y-%m-%d").zip" $DIR
+  zip -r /etc/CSF-BKP-$(date +"%m%d%Y%H%M%S").zip $DIR
   
   else  echo 'No CSF directory in default path. So installing new copy of CSF..'
   #apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.com/csf.tgz && tar -xzf csf.tgz && cd csf && bash install.hestia.sh
