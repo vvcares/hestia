@@ -1,6 +1,6 @@
 #!/bin/bash
 #Author : vvcares.com
-#Tested with Hestia v1.7x
+#Tested with Hestia v1.7.3
 
 DIR="/etc/csf/"
 if [ -d "$DIR" ]; then
