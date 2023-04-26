@@ -1,16 +1,18 @@
 #!/bin/bash
 #Author : vvcares.com
-#Tested with Hestia v1.7.3
+#Tested with Hestia v1.7.3 + Ubuntu 22.04
 
 DIR="/etc/csf/"
 T=$(date +"%m%d%Y%H%M%S")
 BKP=/etc/CSF-$T
 PANEL=/usr/local/hestia/web/templates/includes/panel.php
 PANEL2=/usr/local/hestia/web/list/csf
-HESTIAPORT="$BACKEND_PORT"
-CSFCONF='/etc/csf/csf.conf'
-HESTIAPORT='source /usr/local/hestia/conf/hestia.conf | echo $BACKEND_PORT'
 
+CSFCONF='/etc/csf/csf.conf'
+#HESTIAPORT='source /usr/local/hestia/conf/hestia.conf | echo $BACKEND_PORT'
+
+source /usr/local/hestia/conf/hestia.conf
+HESTIAPORT="$BACKEND_PORT"
 
 if [ -d "$DIR" ]; then
   echo "Existing CSF folder detected & skip new CSF install & proceeding to config hestia panel navigation"
@@ -19,25 +21,32 @@ if [ -d "$DIR" ]; then
   sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.com/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
 fi
 
-
 #Setting up hestia folders
+
+rm -R /usr/local/hestia/bin/csf.pl*
+rm -R $PANEL2
 mkdir -v -m 0600 $PANEL2
 cp -R /etc/csf/ui/images $PANEL2
 find $PANEL2 -type f -exec chmod -v 644 {} \;
 
-rm -f /usr/local/hestia/bin/csf.pl*
-wget https://raw.githubusercontent.com/vvcares/hestia/master/hestia-csf/csf.pl -P /usr/local/hestia/bin/
+wget https://raw.githubusercontent.com/vvcares/hestia/master/hestia-csf/csf.pl -P /usr/local/hestia/bin
+wget https://raw.githubusercontent.com/vvcares/hestia/master/hestia-csf/frame.php -P $PANEL2
+wget https://raw.githubusercontent.com/vvcares/hestia/master/hestia-csf/index.php -P $PANEL2
+
 chmod 700 /usr/local/hestia/bin/csf.pl
+chmod 711 $PANEL2
+chmod 744 $PANEL2/*
 #############
 
 cp $CSFCONF $CSFCONF-BKP-$T
 #zip -r $BKP.zip $DIR
 
 
-#Add Hestia port into CSF TCP_IN
-sed -i '/TCP_IN = "'$HESTIAPORT'/!s/TCP_IN = "/TCP_IN = "'$HESTIAPORT,'/' $CSFCONF
+sed -i 's/TESTING = "1"/TESTING = "0"/g' $CSFCONF #CSF Testing mode 0
+sed -i '/TCP_IN = "'$HESTIAPORT'/!s/TCP_IN = "/TCP_IN = "'$HESTIAPORT,'/' $CSFCONF #Add Hestia port into CSF TCP_IN
+sed -i 's/RESTRICT_SYSLOG = "0"/RESTRICT_SYSLOG = "3"/g' $CSFCONF #CSF Attribute
+sudo csf -ra
 #nano $CSFCONF
-
 
 # Add the CSF navigation link into panel top right
 if grep -q 'CSF' $PANEL; then
