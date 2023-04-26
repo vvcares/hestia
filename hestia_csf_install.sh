@@ -11,12 +11,14 @@ HESTIAPORT="$BACKEND_PORT"
 CSFCONF='/etc/csf/csf.conf'
 HESTIAPORT='source /usr/local/hestia/conf/hestia.conf | echo $BACKEND_PORT'
 
+
 if [ -d "$DIR" ]; then
   echo "Existing CSF folder detected & skip new CSF install & proceeding to config hestia panel navigation"
   
   else  echo 'No CSF directory in default path. So installing FRESH copy of CSF..'
   sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.com/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
 fi
+
 
 #Setting up hestia folders
 mkdir -v -m 0600 $PANEL2
@@ -31,9 +33,11 @@ chmod 700 /usr/local/hestia/bin/csf.pl
 cp $CSFCONF $CSFCONF-BKP-$T
 #zip -r $BKP.zip $DIR
 
+
 #Add Hestia port into CSF TCP_IN
 sed -i '/TCP_IN = "'$HESTIAPORT'/!s/TCP_IN = "/TCP_IN = "'$HESTIAPORT,'/' $CSFCONF
 #nano $CSFCONF
+
 
 # Add the CSF navigation link into panel top right
 if grep -q 'CSF' $PANEL; then
