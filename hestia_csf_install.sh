@@ -52,4 +52,3 @@ sed -i '/<div class="top-bar-right">/a <!-- CSF Link START --> <?php if ($_SESSI
 fi
 
 #nano $PANEL
- rm hestia_csf_install.sh*
