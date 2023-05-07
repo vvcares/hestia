@@ -33,7 +33,7 @@ wget https://raw.githubusercontent.com/vvcares/hestia/master/hestia-csf/frame.ph
 wget https://raw.githubusercontent.com/vvcares/hestia/master/hestia-csf/index.php -P $PANEL2
 
 chmod 700 /usr/local/hestia/bin/csf.pl
-chmod -R 755 $PANEL2/
+chmod -R 755 $PANEL2
 #############
 
 cp $CSFCONF $CSFCONF-BKP-$T                                       #bkp existing CSF.CONF
