@@ -1,8 +1,6 @@
 #!/bin/bash
 #Author : vvcares.com
 #Tested with Hestia v1.7.3 + Ubuntu 22.04
-# Pre-install packages
-apt-get install libwww-perl liblwp-protocol-https-perl libgd-graph-perl -y
 DIR="/etc/csf/"
 T=$(date +"%m%d%Y%H%M%S")
 PANEL=/usr/local/hestia/web/templates/includes/panel.php
@@ -18,7 +16,7 @@ if [ -d "$DIR" ]; then
   echo "*** [Existing CSF folder detected & skip new CSF install & proceeding to Setting up for hestia]"
   
   else  echo '*** [No CSF directory in default path. So installing FRESH copy of CSF..]'
-  sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.com/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
+  sudo apt update -y && apt-get install libwww-perl liblwp-protocol-https-perl libgd-graph-perl-y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.com/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
 fi
 
 #Setting up for hestia
