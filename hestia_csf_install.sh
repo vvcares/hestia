@@ -1,7 +1,6 @@
 #!/bin/bash
 #Author : vvcares.com
 #Tested with Hestia v1.7.3 + Ubuntu 22.04
-
 DIR="/etc/csf/"
 T=$(date +"%m%d%Y%H%M%S")
 PANEL=/usr/local/hestia/web/templates/includes/panel.php
@@ -17,7 +16,7 @@ if [ -d "$DIR" ]; then
   echo "*** [Existing CSF folder detected & skip new CSF install & proceeding to Setting up for hestia]"
   
   else  echo '*** [No CSF directory in default path. So installing FRESH copy of CSF..]'
-  sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.com/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
+  sudo apt update -y && apt-get install libwww-perl liblwp-protocol-https-perl libgd-graph-perl-y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.com/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
 fi
 
 #Setting up for hestia
@@ -40,6 +39,8 @@ cp $CSFCONF $CSFCONF-BKP-$T                                       #bkp existing 
 sed -i 's/TESTING = "1"/TESTING = "0"/g' $CSFCONF                 #CSF Testing mode 0
 sed -i '/TCP_IN = "'$HESTIAPORT'/!s/TCP_IN = "/TCP_IN = "'$HESTIAPORT,'/' $CSFCONF #Add Hestia port into CSF TCP_IN
 sed -i 's/RESTRICT_SYSLOG = "0"/RESTRICT_SYSLOG = "3"/g' $CSFCONF #CSF Attribute
+sed -i 's/ST_ENABLE = "1"/ST_ENABLE = "0"/g' $CSFCONF                 #CSF statistical mode 0
+sed -i 's/ST_SYSTEM = "1"/ST_SYSTEM = "0"/g' $CSFCONF                 #CSF graph mode 0
 sudo csf -ra
 #nano $CSFCONF
 
