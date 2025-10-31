@@ -17,7 +17,7 @@ if [ -d "$DIR" ]; then
   echo "*** [Existing CSF folder detected & skip new CSF install & proceeding to Setting up for hestia]"
   
   else  echo '*** [No CSF directory in default path. So installing FRESH copy of CSF..]'
-  sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://raw.githubusercontent.com/waytotheweb/scripts/master/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
+  sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://raw.githubusercontent.com/waytotheweb/scripts/refs/heads/main/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
 fi
 
 #Setting up for hestia
