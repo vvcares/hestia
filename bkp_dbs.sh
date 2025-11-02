@@ -1,4 +1,3 @@
-##### Latest TESTED ON Mar'2023 - Ubuntu-v20, Mysql-v8, Mariadb-v10
 #!/bin/bash
 ## backup each mysql db into a different file, rather than one big file
 ## as with --all-databases. This will make restores easier.
@@ -26,7 +25,8 @@
 USER=$user
 PASS=$password
 
-OUTPUTDIR=$(dirname $0)"/databases"
+BkpDIR=$(dirname $0)"/backups" #vv_files/backups
+SQLsDIR=$BkpDIR"/databases"
 MYSQLDUMP="/usr/bin/mysqldump"
 MYSQL="/usr/bin/mysql"
 timestamp=$(date +%F_%H%M)
@@ -34,14 +34,14 @@ timestamp=$(date +%F_%H%M)
 pfix="AllDbs"
 sfix="DBs.tar.gz"
 bkp_file=$pfix-$timestamp-$sfix #File name to be as backup done
-days=+6 				#Days old files will be deleted (system modified date)
-rm -r $OUTPUTDIR			#remove the previous database source folder
-mkdir -p $OUTPUTDIR 			#make the new database source folder
-path=$(dirname $0) 			#set the working directory as current path
+days=+3 						#Days old files will be deleted (system modified date)
+rm -r  $SQLsDIR				#remove the previous database source folder
+mkdir -p $BkpDIR $SQLsDIR			#make the new database source folder
+
 log=$(dirname $0)/log_bkpdbs.log
 log1=log_bkpdbs.log 			#log file name
 log=$(dirname $0)/$log1			#will make new log file if not there
-rm $log					#remove previous log file
+rm $log						 	#remove previous log file
 
 echo All Databases backup [$timestamp ]>>$log
 echo - Starting Backup Process >>$log
@@ -61,7 +61,7 @@ if [ -z "$1" ]; then
 		--opt --single-transaction \
 		--skip-events --routines --triggers \
 		--databases $database \
-		--result-file="$OUTPUTDIR/$database.sql"
+		--result-file="$SQLsDIR/$database.sql"
 	done
 else
 	for database in ${@}; do
@@ -72,10 +72,10 @@ else
 		--opt --single-transaction \
 		--skip-events --routines --triggers \
 		--databases $database \
-		--result-file="$OUTPUTDIR/$database.sql"
+		--result-file="$SQLsDIR/$database.sql"
 	done
 	fi
-	cp $log $OUTPUTDIR
-	tar -zcvf $(dirname $0)/$bkp_file $OUTPUTDIR |tee -a $log
+	cp $log $BkpDIR
+	tar -zcvf $BkpDIR/$bkp_file $SQLsDIR |tee -a $log
 	
-#/usr/bin/mail -s "All DBs backup [s1.paysofts.com]" sales@vvcares.com < $log
+/usr/bin/mail -s "All DBs backup [s1]" root < $log
