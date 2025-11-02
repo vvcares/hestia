@@ -6,8 +6,9 @@ DIR="/etc/csf/"
 T=$(date +"%m%d%Y%H%M%S")
 PANEL=/usr/local/hestia/web/templates/includes/panel.php
 PANEL2=/usr/local/hestia/web/list/csf
-CSF_SERVER = https://download.configserver.dev
-CSF_UPDATE_SETTING ="echo $CSF_DSERVER > /etc/csf/downloadservers"
+
+CSF_SERVER='https://download.configserver.dev'
+CSF_UPDATE_CONF='/etc/csf/downloadservers'
 CSFCONF='/etc/csf/csf.conf'
 
 #HESTIAPORT='source /usr/local/hestia/conf/hestia.conf | echo $BACKEND_PORT'
@@ -47,7 +48,8 @@ sudo csf -ra
 #nano $CSFCONF
 
 #Updating CSF..
-echo 'Updating CSF..' $CSF_UPDATE_SETTING && csf -u
+grep -qxF $CSF_SERVER $CSF_UPDATE_CONF || echo $CSF_SERVER >> $CSF_UPDATE_CONF
+
 
 # Add the CSF navigation link into panel top right
 if grep -q 'CSF' $PANEL; then
