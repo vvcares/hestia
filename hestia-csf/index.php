@@ -91,7 +91,7 @@ render_page($user, $TAB, "");
     }
     /* Special grid for Quick Actions (2 columns max) */
     #content-quick-actions .csf-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 
     .csf-grid-item a {
@@ -244,6 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="csf-grid-item">
                 <a href="#" onclick="return loadContent('manualcheck', this, null);" class="csf-button csf-header"><i class="fas fa-info-circle"></i> UPGRADE / STATUS INFO</a>
+            </div>
+			<div class="csf-grid-item">
+                <a href="#" onclick="return loadContent('#', this, null);" class="csf-button csf-header"><i class="fas fa-info-circle"></i> ALL SETTINGS</a>
             </div>
         </div>
     </div>
