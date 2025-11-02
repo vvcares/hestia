@@ -7,7 +7,7 @@ T=$(date +"%m%d%Y%H%M%S")
 PANEL=/usr/local/hestia/web/templates/includes/panel.php
 PANEL2=/usr/local/hestia/web/list/csf
 
-CSF_SERVER='https://download.configserver.dev'
+CSF_SERVER='download.configserver.dev'
 CSF_UPDATE_CONF='/etc/csf/downloadservers'
 CSFCONF='/etc/csf/csf.conf'
 
@@ -21,7 +21,7 @@ if [ -d "$DIR" ]; then
   echo "*** [Existing CSF folder detected & skip new CSF install & proceeding to Setting up for hestia]"
   
   else  echo '*** [No CSF directory in default path. So installing FRESH copy of CSF..]'
-  sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget $CSF_Server/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
+  sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://$CSF_Server/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
 fi
 
 
