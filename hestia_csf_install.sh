@@ -48,7 +48,7 @@ sudo csf -ra
 #nano $CSFCONF
 
 #Updating CSF..
-grep -qxF $CSF_SERVER $CSF_UPDATE_CONF || echo $CSF_SERVER >> $CSF_UPDATE_CONF
+grep -qxF $CSF_SERVER $CSF_UPDATE_CONF || echo $CSF_SERVER >> $CSF_UPDATE_CONF && csf -u
 
 
 # Add the CSF navigation link into panel top right
