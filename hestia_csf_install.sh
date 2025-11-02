@@ -6,10 +6,11 @@ DIR="/etc/csf/"
 T=$(date +"%m%d%Y%H%M%S")
 PANEL=/usr/local/hestia/web/templates/includes/panel.php
 PANEL2=/usr/local/hestia/web/list/csf
-
+CSF_SERVER = https://download.configserver.dev
+CSF_UPDATE_SETTING ="echo $CSF_DSERVER > /etc/csf/downloadservers"
 CSFCONF='/etc/csf/csf.conf'
-#HESTIAPORT='source /usr/local/hestia/conf/hestia.conf | echo $BACKEND_PORT'
 
+#HESTIAPORT='source /usr/local/hestia/conf/hestia.conf | echo $BACKEND_PORT'
 source /usr/local/hestia/conf/hestia.conf
 HESTIAPORT="$BACKEND_PORT"
 
@@ -19,12 +20,11 @@ if [ -d "$DIR" ]; then
   echo "*** [Existing CSF folder detected & skip new CSF install & proceeding to Setting up for hestia]"
   
   else  echo '*** [No CSF directory in default path. So installing FRESH copy of CSF..]'
-  sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget https://download.configserver.dev/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
+  sudo apt update -y && apt-get install libwww-perl -y && cd /usr/src && rm -fv csf.tgz && wget $CSF_Server/csf.tgz && tar -xzf csf.tgz && cd csf && sudo sh install.sh && sudo csf -v && perl /usr/local/csf/bin/csftest.pl
 fi
 
 
 #Setting up for hestia
-
 rm -R /usr/local/hestia/bin/csf.pl*
 rm -R $PANEL2
 mkdir -v -m 0600 $PANEL2
@@ -46,9 +46,12 @@ sed -i 's/RESTRICT_SYSLOG = "0"/RESTRICT_SYSLOG = "3"/g' $CSFCONF #CSF Attribute
 sudo csf -ra
 #nano $CSFCONF
 
+#Updating CSF..
+echo 'Updating CSF..' $CSF_UPDATE_SETTING && csf -u
+
 # Add the CSF navigation link into panel top right
 if grep -q 'CSF' $PANEL; then
-echo '*** [This CSF Link Is Already There.]'
+echo '*** [This CSF Link Is Already In Hestia Dashboard.]'
 else
 sed -i '/<div class="top-bar-right">/a <!-- CSF Link START --> <?php if ($_SESSION["user"] == "admin") { ?><li class="top-bar-menu-item"><a title="<?= _("CSF Firewall") ?>" class="top-bar-menu-link <?php if($TAB == "CSF") echo active ?>" href="/list/csf/"><i class="fas fa-shield-halved"></i><span class="top-bar-menu-link-label u-hide-desktop"><?= _("CSF Firewall") ?></span></a></li><?php } ?> <!-- CSF Link END --> ' $PANEL
 fi
