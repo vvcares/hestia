@@ -40,8 +40,9 @@ chmod 700 /usr/local/hestia/bin/csf.pl
 chmod -R 755 $PANEL2
 #############
 
-cp $CSFCONF $CSFCONF-BKP-$T                                       #bkp existing CSF.CONF
-sed -i 's/TESTING = "1"/TESTING = "0"/g' $CSFCONF                 #CSF Testing mode 0
+cp $CSFCONF $CSFCONF-BKP-$T  #bkp existing CSF.CONF
+find /etc/csf/ -type f -name "csf.conf-BKP-*" -mtime +7 -delete #Removing any older csf-bkp files
+sed -i 's/TESTING = "1"/TESTING = "0"/g' $CSFCONF  #CSF Testing mode 0
 sed -i '/TCP_IN = "'$HESTIAPORT'/!s/TCP_IN = "/TCP_IN = "'$HESTIAPORT,'/' $CSFCONF #Add Hestia port into CSF TCP_IN
 sed -i 's/RESTRICT_SYSLOG = "0"/RESTRICT_SYSLOG = "3"/g' $CSFCONF #CSF Attribute
 sudo csf -ra
