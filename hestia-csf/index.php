@@ -36,7 +36,7 @@ render_page($user, $TAB, 'ConfigServer Security & Firewall');
     <div class="csf-sub-nav-content" id="content-quick-actions">
         <div class="csf-grid">
             <div class="csf-grid-item"><a href="#" onclick="return loadContent('restart', this, null);" class="csf-button csf-status"><i class="fas fa-sync-alt"></i> RESTART CSF & LFD</a></div>
-            <div class="csf-grid-item"><a href="#" onclick="return loadContent('deny', this, null);" class="csf-button csf-header"><i class="fas fa-info-circle"></i>Add DENY IP</a></div>
+            <div class="csf-grid-item"><a href="/add/firewall/banlist/" xonclick="return loadContent('deny', this, null);" class="csf-button csf-header"><i class="fas fa-info-circle"></i>BAN IP</a></div>
         </div>
     </div>
 
