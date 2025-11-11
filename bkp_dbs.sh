@@ -38,7 +38,7 @@ days=+3 						#Days old files will be deleted (system modified date)
 rm -r  $SQLsDIR				#remove the previous database source folder
 mkdir -p $BkpDIR $SQLsDIR			#make the new database source folder
 
-log=$(dirname $0)/log_bkpdbs.log
+log=$(dirname $0)/logs/log_bkpdbs.log
 log1=log_bkpdbs.log 			#log file name
 log=$(dirname $0)/$log1			#will make new log file if not there
 rm $log						 	#remove previous log file
